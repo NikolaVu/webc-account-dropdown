@@ -1,0 +1,119 @@
+<link rel="import" href="bower_components/polymer/polymer.html">
+
+<link rel="import" href="bower_components/neon-animation/neon-animations.html">
+<link rel="import" href="bower_components/neon-animation/neon-animation-runner-behavior.html">
+
+<dom-module id="appsco-dropdown">
+    <template>
+        <style>
+            :host{
+                display: none;
+                background: transparent;
+                color: black;
+
+            }
+            :host .content {
+                @apply(--shadow-elevation-2dp);
+                background-color: #ffffff;
+                /*padding: 16px;*/
+            }
+            :host .caret {
+                height: 10px;
+                position: relative;
+                overflow: hidden;
+            }
+            :host .caret > div:first-child {
+                width: 0;
+                height: 0;
+                border-left: 11px solid transparent;
+                border-right: 11px solid transparent;
+                border-bottom: 11px solid rgba(0,0,0, 0.4);
+                position: absolute;
+                right: 10px;
+            }
+            :host .caret > div:last-child {
+                width: 0;
+                height: 0;
+                border-left: 10px solid transparent;
+                border-right: 10px solid transparent;
+                border-bottom: 10px solid var(--caret-color, rgb(255,255,255));
+                position: absolute;
+                right: 11px;
+            }
+        </style>
+        <div class="caret">
+            <div></div>
+            <div></div>
+        </div>
+        <div class="content"><content></content></div>
+    </template>
+
+    <script>
+
+        Polymer({
+            is: 'appsco-dropdown',
+            behaviors: [
+                Polymer.NeonAnimationRunnerBehavior
+            ],
+            properties: {
+                animationConfig: {
+                    type: Object,
+                    value: function() {
+                        return {
+                            'entry': [{
+                                name: 'scale-up-animation',
+                                node: this,
+                                axis: 'y',
+                                transformOrigin: '0 0'
+                            }],
+                            'exit': [{
+                                name: 'scale-down-animation',
+                                node: this,
+                                axis: 'y',
+                                timing: {
+                                    duration: 0
+                                }
+                            }]
+                        }
+                    }
+                },
+                _showing: {
+                    type: Boolean,
+                    value: false
+                }
+            },
+            listeners: {
+                'neon-animation-finish': '_onAnimationFinish',
+                'blur': '__tryHide'
+            },
+            _onAnimationFinish: function() {
+                if (this._showing) {
+                } else {
+                    this.style.display = '';
+                }
+            },
+            show: function() {
+                this.style.display = 'inline-block';
+                this._showing = true;
+                this.focus();
+                this.playAnimation('entry');
+            },
+            hide: function() {
+                this._showing = false;
+                this.playAnimation('exit');
+            },
+            toggle: function(e){
+                this._showing ? this.__tryHide(e) : this.show();
+            },
+            __tryHide: function(e) {
+
+                if(e instanceof FocusEvent && null == e.relatedTarget) {
+                    this.hide();
+                }
+                if(e instanceof FocusEvent && null != e.relatedTarget) {
+                    this.focus();
+                }
+            }
+        });
+    </script>
+</dom-module>
