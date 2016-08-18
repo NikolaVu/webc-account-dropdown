@@ -1,0 +1,37 @@
+<link rel="import" href="bower_components/polymer/polymer.html">
+
+<dom-module id="property-check">
+    <template>
+
+        <template is="dom-if" if="{{exists}}">
+            <content></content>
+        </template>
+
+    </template>
+
+    <script>
+        Polymer({
+            is: 'property-check',
+
+            properties: {
+                'property': {
+                    type: String,
+                    value: '',
+                    notify: true
+                },
+                'exists': {
+                    type: Boolean,
+                    value: false
+                }
+            },
+
+            listeners: {
+                'property-changed': '_propertyChanged'
+            },
+
+            _propertyChanged: function() {
+                this.exists = (this.property && this.property != '' && this.property != null);
+            }
+        });
+    </script>
+</dom-module>

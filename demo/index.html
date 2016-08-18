@@ -1,6 +1,6 @@
 <!doctype html>
 <html>
-  <head>
+<head>
     <title>appsco-user-element demo</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
@@ -12,25 +12,49 @@
     <link rel="import" href="../appsco-user-element.html">
 
     <style is="custom-style" include="demo-pages-shared-styles">
-      :root {
-        --border-color: rgba(128, 0, 3, 1);
-        --color: rgba(128, 0, 3, 1);
-      }
+        :root {
+            --border-color: #d5d8d8;
+            --color: #7E97B2;
+        }
+        :root {
+            --paper-button-raised-keyboard-focus: {
+                font-weight: normal;
+            };
+        }
+        :root .divider {
+            width: 100%;
+            height: 1px;
+            background-color: #DADCDE;
+        }
+        :root .float-left {
+            float: left;
+        }
+        :root .float-right {
+            float: right;
+        }
+        :root img {
+            max-width: 100%;
+        }
+        :root .clearfix:before, :root .clearfix:after {
+            content: " ";
+            display: table;
+        }
+        :root .clearfix:after {
+            clear: both;
+        }
+        :root paper-button {
+            @apply(--paper-button-raised-keyboard-focus);
+        }
     </style>
-  </head>
-  <body>
-
+</head>
+<body>
     <div class="vertical-section-container centered">
-      <h3>Basic appsco-user-element Demo</h3>
-      <demo-snippet>
-        <template>
-          <appsco-user-element
-                  user='{ "first": "Sima", "last": "Simic", "image": "https://www.gravatar.com/avatar/4fd03938b42cbaf65b1f69d11094f497?s=328&d=identicon&r=PG"}'
-                  user-image="https://www.gravatar.com/avatar/4fd03938b42cbaf65b1f69d11094f497?s=328&d=identicon&r=PG"
-          ></appsco-user-element>
-        </template>
-      </demo-snippet>
+        <h3>Basic appsco-user-element Demo</h3>
+        <demo-snippet>
+            <template>
+                <appsco-user-element></appsco-user-element>
+            </template>
+        </demo-snippet>
     </div>
-
-  </body>
+</body>
 </html>

@@ -10,12 +10,11 @@
                 display: none;
                 background: transparent;
                 color: black;
-
             }
             :host .content {
                 @apply(--shadow-elevation-2dp);
                 background-color: #ffffff;
-                /*padding: 16px;*/
+                border-radius: 4px;
             }
             :host .caret {
                 height: 10px;
@@ -39,6 +38,9 @@
                 border-bottom: 10px solid var(--caret-color, rgb(255,255,255));
                 position: absolute;
                 right: 11px;
+            }
+            :host[open] {
+                display: block;
             }
         </style>
         <div class="caret">
@@ -64,55 +66,59 @@
                                 name: 'scale-up-animation',
                                 node: this,
                                 axis: 'y',
-                                transformOrigin: '0 0'
+                                transformOrigin: '0 0',
+                                timing: {
+                                    duration: 300
+                                }
                             }],
                             'exit': [{
                                 name: 'scale-down-animation',
                                 node: this,
-                                axis: 'y',
-                                timing: {
-                                    duration: 0
-                                }
+                                axis: 'y'
                             }]
                         }
                     }
                 },
-                _showing: {
+                open: {
                     type: Boolean,
-                    value: false
+                    value: false,
+                    notify: true,
+                    reflectToAttribute: true
                 }
             },
             listeners: {
                 'neon-animation-finish': '_onAnimationFinish',
-                'blur': '__tryHide'
+                'tap': '__handleTap',
+                'blur': '__tryHide',
+                'open-changed': '__openChanged'
             },
             _onAnimationFinish: function() {
-                if (this._showing) {
-                } else {
-                    this.style.display = '';
-                }
-            },
-            show: function() {
-                this.style.display = 'inline-block';
-                this._showing = true;
                 this.focus();
-                this.playAnimation('entry');
-            },
-            hide: function() {
-                this._showing = false;
-                this.playAnimation('exit');
-            },
-            toggle: function(e){
-                this._showing ? this.__tryHide(e) : this.show();
             },
             __tryHide: function(e) {
 
-                if(e instanceof FocusEvent && null == e.relatedTarget) {
-                    this.hide();
+                console.log('Blur on dropdown');
+
+//                if (Polymer.dom(e).localTarget != this) {
+//                    this.open = false;
+//                }
+
+            },
+            __openChanged: function(e) {
+
+                if (this.open) {
+                    this.playAnimation('entry');
                 }
-                if(e instanceof FocusEvent && null != e.relatedTarget) {
-                    this.focus();
+                else {
+                    this.playAnimation('exit');
                 }
+
+            },
+            __handleTap: function(e) {
+                e.stopPropagation();
+
+                this.open = true;
+                this.focus();
             }
         });
     </script>
