@@ -4,10 +4,10 @@
     <title>appsco-user-element demo</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
-    <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
 
-    <link rel="import" href="../bower_components/iron-demo-helpers/demo-pages-shared-styles.html">
-    <link rel="import" href="../bower_components/iron-demo-helpers/demo-snippet.html">
+    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
 
     <link rel="import" href="../appsco-user-element.html">
 
@@ -52,7 +52,28 @@
         <h3>Basic appsco-user-element Demo</h3>
         <demo-snippet>
             <template>
-                <appsco-user-element></appsco-user-element>
+                <appsco-user-element
+                        active-account='{
+                                            "firstName": "John",
+                                            "lastName": "Doe",
+                                            "email": "john.doe@exampleemail.com",
+                                            "image": "http://app-layout-assets.appspot.com/assets/PharrellWilliams.jpg"
+                                        }'
+                        accounts='[
+                                    {
+                                        "firstName":"Nikola",
+                                        "lastName":"Vucinic",
+                                        "email":"nikola.vucinic@boutsourcing.com.com",
+                                        "image":"http://app-layout-assets.appspot.com/assets/PharrellWilliams.jpg"
+                                    },
+                                    {
+                                        "firstName":"Boris",
+                                        "lastName":"Vujicic",
+                                        "email":"boris.vujicic@boutsourcing.com.com",
+                                        "image":"http://app-layout-assets.appspot.com/assets/PharrellWilliams.jpg"
+                                    }
+                                    ]'
+                        display-short></appsco-user-element>
             </template>
         </demo-snippet>
     </div>

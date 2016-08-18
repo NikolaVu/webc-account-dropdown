@@ -1,9 +1,9 @@
-<link rel="import" href="bower_components/polymer/polymer.html">
+<link rel="import" href="../polymer/polymer.html">
 
-<link rel="import" href="bower_components/iron-icons/iron-icons.html">
-<link rel="import" href="bower_components/iron-icon/iron-icon.html">
-<link rel="import" href="bower_components/paper-button/paper-button.html">
-<link rel="import" href="bower_components/paper-item/paper-item.html">
+<link rel="import" href="../iron-icons/iron-icons.html">
+<link rel="import" href="../iron-icon/iron-icon.html">
+<link rel="import" href="../paper-button/paper-button.html">
+<link rel="import" href="../paper-item/paper-item.html">
 <link rel="import" href="property-check.html">
 
 
@@ -13,13 +13,19 @@
 `appsco-user-element`
 Representation of user identity
 
+Example:
+
+    <appsco-user-element></appsco-user-element>
+    <appsco-user-element display-short></appsco-user-element>
+    <appsco-user-element active-account="{{activeAccount}}" accounts="{{accounts}}" display-short></appsco-user-element>
+
 Custom property | Description | Default
 ----------------|-------------|----------
 `--paper-button-ink-color` | Background color of the ripple | Based on the button's color
 `--paper-button` | Mixin applied to the button | `{}`
 `--active-account-background` | Applied to | BDefault color rgb(244, 247, 249);
 
-@demo demo/index.html 
+@demo demo/index.html
 -->
 
 <dom-module id="appsco-user-element">
@@ -27,10 +33,11 @@ Custom property | Description | Default
         <style>
             :host {
                 --active-account-background: rgb(255, 255, 255);
-                display: inline-block;
+                /*display: inline-block;*/
                 color: var(--color, rgba(125, 125, 125, 1));
                 position: relative;
                 cursor: pointer;
+                display: none;
             }
             :host paper-button {
                 margin: 0;
@@ -132,32 +139,42 @@ Custom property | Description | Default
                 background-color: #ffffff;
                 border: 1px solid #DADCDE;
             }
+            :host[display-short] .display-long {
+                display: none;
+            }
+            :host[display-short] appsco-dropdown {
+                top: 40px;
+                right: -5px;
+            }
+            :host[display] {
+                display: inline-block;
+            }
         </style>
 
         <div class="account-holder">
-            <div class="user-holder clearfix">
-                <img src="[[ user.image ]]" class="account-img float-left">
+            <div id="triggerDropdown" class="user-holder clearfix">
+                <img src="[[ activeAccount.image ]]" class="account-img float-left">
 
-                <property-check property="{{user.firstName}}">
-                    <span class="account-info">[[ user.firstName ]] [[ user.lastName ]]</span>
+                <property-check class="display-long" property="[[ activeAccount.firstName ]]">
+                    <span class="account-info">[[ activeAccount.firstName ]] [[ activeAccount.lastName ]]</span>
                 </property-check>
 
-                <iron-icon icon="arrow-drop-down"></iron-icon>
+                <iron-icon icon="arrow-drop-down" class="display-long"></iron-icon>
             </div>
 
-            <appsco-dropdown id="dropdown" open="{{pressed}}" tabindex="-1">
+            <appsco-dropdown open="{{ pressed }}" trigger="[[ triggerDropdown ]]">
                 <div class="account-holder">
                     <div class="active-account account">
                         <div class="image-holder">
-                            <img src="[[ user.image ]]" class="account-img float-left">
+                            <img src="[[ activeAccount.image ]]" class="account-img float-left">
                         </div>
                         <div class="account-info">
 
-                            <property-check property="{{user.firstName}}">
-                                <span class="info-lead">[[ user.firstName ]] [[ user.lastName ]]</span>
+                            <property-check property="[[ activeAccount.firstName ]]">
+                                <span class="info-lead">[[ activeAccount.firstName ]] [[ activeAccount.lastName ]]</span>
                             </property-check>
 
-                            <span class="info-additional">[[ user.email ]]</span>
+                            <span class="info-additional">[[ activeAccount.email ]]</span>
 
                             <paper-button class="btn-primary action-my-account">
                                 My Account
@@ -165,24 +182,24 @@ Custom property | Description | Default
                         </div>
                     </div>
                 </div>
-                <div class="divider"></div>
+
                 <div class="account-holder">
-                    <div class="account additional-account clearfix">
-                        <img src="[[ user.image ]]" class="account-img float-left">
-                        <div class="account-info float-left">
-                            <span class="info-lead">Boris Vujicic</span>
-                            <span class="info-additional">boris.vujicic@boutsourcing.com</span>
+
+                    <template is="dom-repeat" items="{{ accounts }}">
+
+                        <div class="divider"></div>
+                        <div class="account additional-account clearfix">
+                            <img src="[[ item.image ]]" class="account-img float-left">
+                            <div class="account-info float-left">
+                                <span class="info-lead">[[ item.firstName ]] [[ item.lastName ]]</span>
+                                <span class="info-additional">[[ item.email ]]</span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="divider"></div>
-                    <div class="account additional-account clearfix">
-                        <img src="[[ user.image ]]" class="account-img float-left">
-                        <div class="account-info float-left">
-                            <span class="info-lead">Nikola Vucinic</span>
-                            <span class="info-additional">nikola.vucinic@boutsourcing.com</span>
-                        </div>
-                    </div>
+
+                    </template>
+
                 </div>
+
                 <div class="divider"></div>
                 <div class="actions">
                     <paper-button class="btn-default">Add Account</paper-button>
@@ -195,33 +212,78 @@ Custom property | Description | Default
     </template>
 
     <script>
+
         Polymer({
 
             is: 'appsco-user-element',
 
             properties: {
-                "user": {
-                    type: Object,
-                    notify: true,
-                    value: {}
+
+                display: {
+                    type: Boolean,
+                    value: false,
+                    reflectToAttribute: true
                 },
+
+                /**
+                 * Active account from AppsCo dashboard.
+                 */
+                activeAccount: {
+                    type: Object
+                },
+
+                /**
+                 * Additional accounts from AppsCo dashboard - currently inactive.
+                 */
+                accounts: {
+                    type: Object
+                },
+
+                /**
+                 * If attribute is set account display will contain account-image only.
+                 * Otherwise, account display will contain account-image followed by account-name.
+                 */
+                displayShort: {
+                    type: Boolean,
+                    value: false,
+                    reflectToAttribute: true
+                },
+
+                /**
+                 * Indicates if user clicked on element or not.
+                 */
                 pressed: {
                     type: Boolean,
                     value: false,
                     notify: true
+                },
+
+                triggerDropdown: {
+                    type: Object,
+                    notify: true
                 }
             },
-            ready: function() {
-                this.setAttribute('user', JSON.stringify({
-                    firstName: 'John',
-                    lastName: "Doe",
-                    email: "john.doe@exampleemail.com",
-                    image: "http://app-layout-assets.appspot.com/assets/PharrellWilliams.jpg"
-                }));
-            },
+
             listeners: {
-                'tap': '__toggle'
+                'triggerDropdown.tap': '__toggle'
             },
+
+            ready: function() {
+
+                if (this.activeAccount) {
+                    this.display = true;
+                }
+
+            },
+
+            attached: function() {
+                this.triggerDropdown = document.getElementById('triggerDropdown');
+            },
+
+            /**
+             * Toggles 'pressed' property.
+             * @private
+             */
             __toggle: function() {
                 this.pressed = !this.pressed;
             }

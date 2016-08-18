@@ -1,7 +1,17 @@
-<link rel="import" href="bower_components/polymer/polymer.html">
+<link rel="import" href="../polymer/polymer.html">
 
-<link rel="import" href="bower_components/neon-animation/neon-animations.html">
-<link rel="import" href="bower_components/neon-animation/neon-animation-runner-behavior.html">
+<link rel="import" href="../neon-animation/neon-animations.html">
+<link rel="import" href="../neon-animation/neon-animation-runner-behavior.html">
+
+<!--
+`appsco-dropdown` represents dropdown element.
+
+Example:
+
+    <appsco-dropdown open="{{ pressed }}" tabindex="-1"></appsco-dropdown>
+
+@demo demo/index.html
+-->
 
 <dom-module id="appsco-dropdown">
     <template>
@@ -54,10 +64,16 @@
 
         Polymer({
             is: 'appsco-dropdown',
+
             behaviors: [
                 Polymer.NeonAnimationRunnerBehavior
             ],
+
             properties: {
+
+                /**
+                 * Animation for dropdown appearance.
+                 */
                 animationConfig: {
                     type: Object,
                     value: function() {
@@ -70,55 +86,86 @@
                                 timing: {
                                     duration: 300
                                 }
-                            }],
-                            'exit': [{
-                                name: 'scale-down-animation',
-                                node: this,
-                                axis: 'y'
                             }]
                         }
                     }
                 },
+
+                /**
+                 * Indicates whether dropdown is opened or not.
+                 * This value comes from an element that triggers dropdown to toggle.
+                 */
                 open: {
                     type: Boolean,
                     value: false,
                     notify: true,
                     reflectToAttribute: true
+                },
+
+                /**
+                 * Indicates if user clicks inside dropdown.
+                 */
+                trigger: {
+                    type: String,
+                    value: '',
+                    notify: true
                 }
             },
+
             listeners: {
-                'neon-animation-finish': '_onAnimationFinish',
-                'tap': '__handleTap',
-                'blur': '__tryHide',
+                'neon-animation-finish': '__onAnimationFinish',
                 'open-changed': '__openChanged'
             },
-            _onAnimationFinish: function() {
+
+            ready: function() {
+
+                Polymer.Gestures.add(document, 'tap', this.__handleDocumentClick.bind(this));
+
+            },
+
+            __isInPath: function(path, item) {
+                path = path || [];
+                for (var i = 0; i < path.length; i++) {
+
+                    if (path[i] == item) {
+                        return true;
+
+                        break;
+                    }
+                }
+
+                return false;
+            },
+
+            __handleDocumentClick: function(e) {
+                var path = Polymer.dom(e).path;
+
+                if (!this.__isInPath(path, this) && !this.__isInPath(path, this.trigger)) {
+                    this.open = false;
+                }
+
+            },
+
+            /**
+             * It is called after dropdown animation is finished.
+             * @private
+             */
+            __onAnimationFinish: function() {
                 this.focus();
             },
-            __tryHide: function(e) {
 
-                console.log('Blur on dropdown');
-
-//                if (Polymer.dom(e).localTarget != this) {
-//                    this.open = false;
-//                }
-
-            },
-            __openChanged: function(e) {
+            /**
+             * Listen for 'open' property change.
+             * If it is true it shows the dropdown.
+             * If it is false it hides the dropdown.
+             * @private
+             */
+            __openChanged: function() {
 
                 if (this.open) {
                     this.playAnimation('entry');
                 }
-                else {
-                    this.playAnimation('exit');
-                }
 
-            },
-            __handleTap: function(e) {
-                e.stopPropagation();
-
-                this.open = true;
-                this.focus();
             }
         });
     </script>
