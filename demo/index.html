@@ -11,41 +11,7 @@
 
     <link rel="import" href="../appsco-user-element.html">
 
-    <style is="custom-style" include="demo-pages-shared-styles">
-        :root {
-            --border-color: #d5d8d8;
-            --color: #7E97B2;
-        }
-        :root {
-            --paper-button-raised-keyboard-focus: {
-                font-weight: normal;
-            };
-        }
-        :root .divider {
-            width: 100%;
-            height: 1px;
-            background-color: #DADCDE;
-        }
-        :root .float-left {
-            float: left;
-        }
-        :root .float-right {
-            float: right;
-        }
-        :root img {
-            max-width: 100%;
-        }
-        :root .clearfix:before, :root .clearfix:after {
-            content: " ";
-            display: table;
-        }
-        :root .clearfix:after {
-            clear: both;
-        }
-        :root paper-button {
-            @apply(--paper-button-raised-keyboard-focus);
-        }
-    </style>
+    <style is="custom-style" include="demo-pages-shared-styles"></style>
 </head>
 <body>
     <div class="vertical-section-container centered">
@@ -57,23 +23,88 @@
                                             "firstName": "John",
                                             "lastName": "Doe",
                                             "email": "john.doe@exampleemail.com",
-                                            "image": "http://app-layout-assets.appspot.com/assets/PharrellWilliams.jpg"
+                                            "image": "http://app-layout-assets.appspot.com/assets/PharrellWilliams.jpg",
+                                            "info": "This account is managed by boutsourcing.com."
                                         }'
                         accounts='[
                                     {
                                         "firstName":"Nikola",
                                         "lastName":"Vucinic",
-                                        "email":"nikola.vucinic@boutsourcing.com.com",
+                                        "email":"nikola.vucinic@boutsourcing.com",
                                         "image":"http://app-layout-assets.appspot.com/assets/PharrellWilliams.jpg"
                                     },
                                     {
                                         "firstName":"Boris",
                                         "lastName":"Vujicic",
-                                        "email":"boris.vujicic@boutsourcing.com.com",
+                                        "email":"boris.vujicic@boutsourcing.com",
+                                        "image":"http://app-layout-assets.appspot.com/assets/PharrellWilliams.jpg"
+                                    }
+                                    ]'
+                        ></appsco-user-element>
+            </template>
+        </demo-snippet>
+    </div>
+
+    <div class="vertical-section-container centered">
+        <h3>Shortend appsco-user-element Demo</h3>
+        <demo-snippet>
+            <template>
+                <appsco-user-element
+                        active-account='{
+                                            "firstName": "John",
+                                            "lastName": "Doe",
+                                            "email": "john.doe@exampleemail.com",
+                                            "image": "http://app-layout-assets.appspot.com/assets/PharrellWilliams.jpg",
+                                            "info": "This account is managed by boutsourcing.com."
+                                        }'
+                        accounts='[
+                                    {
+                                        "firstName":"Nikola",
+                                        "lastName":"Vucinic",
+                                        "email":"nikola.vucinic@boutsourcing.com",
+                                        "image":"http://app-layout-assets.appspot.com/assets/PharrellWilliams.jpg"
+                                    },
+                                    {
+                                        "firstName":"Boris",
+                                        "lastName":"Vujicic",
+                                        "email":"boris.vujicic@boutsourcing.com",
                                         "image":"http://app-layout-assets.appspot.com/assets/PharrellWilliams.jpg"
                                     }
                                     ]'
                         display-short></appsco-user-element>
+            </template>
+        </demo-snippet>
+    </div>
+
+    <div class="vertical-section-container centered">
+        <h3>No additional accounts appsco-user-element Demo</h3>
+        <demo-snippet>
+            <template>
+                <appsco-user-element
+                        active-account='{
+                                            "firstName": "John",
+                                            "lastName": "Doe",
+                                            "email": "john.doe@exampleemail.com",
+                                            "image": "http://app-layout-assets.appspot.com/assets/PharrellWilliams.jpg",
+                                            "info": "This account is managed by boutsourcing.com."
+                                        }'
+                        ></appsco-user-element>
+            </template>
+        </demo-snippet>
+    </div>
+
+    <div class="vertical-section-container centered">
+        <h3>No info appsco-user-element Demo</h3>
+        <demo-snippet>
+            <template>
+                <appsco-user-element
+                        active-account='{
+                                            "firstName": "John",
+                                            "lastName": "Doe",
+                                            "email": "john.doe@exampleemail.com",
+                                            "image": "http://app-layout-assets.appspot.com/assets/PharrellWilliams.jpg"
+                                        }'
+                        ></appsco-user-element>
             </template>
         </demo-snippet>
     </div>
