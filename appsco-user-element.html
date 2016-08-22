@@ -1,0 +1,292 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<link rel="import" href="../iron-icons/iron-icons.html">
+<link rel="import" href="../iron-icon/iron-icon.html">
+<link rel="import" href="../paper-button/paper-button.html">
+<link rel="import" href="../paper-item/paper-item.html">
+<link rel="import" href="property-check.html">
+
+
+<link rel="import" href="appsco-dropdown.html">
+
+<!--
+`appsco-user-element`
+Representation of user identity
+
+Example:
+
+    <appsco-user-element></appsco-user-element>
+    <appsco-user-element display-short></appsco-user-element>
+    <appsco-user-element active-account="{{activeAccount}}" accounts="{{accounts}}" display-short></appsco-user-element>
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--paper-button-ink-color` | Background color of the ripple | Based on the button's color
+`--paper-button` | Mixin applied to the button | `{}`
+`--active-account-background` | Applied to | BDefault color rgb(244, 247, 249);
+
+@demo demo/index.html
+-->
+
+<dom-module id="appsco-user-element">
+    <template>
+        <style>
+            :host {
+                --active-account-background: rgb(255, 255, 255);
+                /*display: inline-block;*/
+                color: var(--color, rgba(125, 125, 125, 1));
+                position: relative;
+                cursor: pointer;
+                display: none;
+            }
+            :host paper-button {
+                margin: 0;
+                background-color: #ffffff;
+                color: var(--color);
+                font-size: 90%;
+            }
+            :host .account-holder:after {
+                clear: both;
+            }
+            :host .user-holder {
+                height: 34px;
+                line-height: 34px;
+            }
+            :host .account-img {
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+            }
+            :host .account-info {
+                margin: 10px 0 0 10px;
+            }
+            :host appsco-dropdown {
+                --caret-color: var(--active-account-background);
+                position: absolute;
+                right: -10px;
+                top: 30px;
+                width: 350px;
+                z-index: 999;
+                color: var(--color, rgba(125, 125, 125, 1));
+                padding: 0;
+                margin: 0;
+            }
+            :host appsco-dropdown:focus {
+                outline: none;
+            }
+            :host appsco-dropdown .account, :host appsco-dropdown .actions {
+                padding: 10px 20px;
+            }
+            :host appsco-dropdown .account-img {
+                width: 48px;
+                height: 48px;
+            }
+            :host appsco-dropdown .account .info-lead {
+                font-size: 120%;
+                margin: 0;
+                display: block;
+            }
+            :host appsco-dropdown .account .info-additional {
+                color: #B2C2D2;
+                font-size: 80%;
+                margin: 0;
+                padding: 0;
+            }
+            :host appsco-dropdown .active-account {
+                display: block;
+                padding: 20px;
+                background-color: var(--active-account-background);
+                border-top-left-radius: 4px;
+                border-top-right-radius: 4px;
+            }
+            :host appsco-dropdown .active-account:after {
+                clear: both;
+            }
+            :host appsco-dropdown .active-account .action-my-account {
+                margin-top: 16px;
+            }
+            :host appsco-dropdown .active-account .image-holder,
+            :host appsco-dropdown .active-account .account-info {
+                display: inline-block;
+            }
+            :host appsco-dropdown .active-account .image-holder {
+                vertical-align: top;
+            }
+            :host appsco-dropdown .active-account .account-img {
+                width: 96px;
+                height: 96px;
+                border-radius: 50%;
+            }
+            :host appsco-dropdown .active-account .account-info {
+                width: 156px;
+                overflow: hidden;
+            }
+            :host appsco-dropdown .additional-account {
+                background-color: rgba(250, 252, 253, 0.6);
+            }
+            :host appsco-dropdown .additional-account:hover {
+                background-color: rgba(250, 252, 253, 1);
+            }
+            :host appsco-dropdown .additional-account .account-info {
+                margin-top: 6px;
+            }
+            :host .btn-primary {
+                color: #fff;
+                background-color: #03BCFF;
+            }
+            :host .btn-default {
+                color: inherit;
+                background-color: #ffffff;
+                border: 1px solid #DADCDE;
+            }
+            :host[display-short] .display-long {
+                display: none;
+            }
+            :host[display-short] appsco-dropdown {
+                top: 40px;
+                right: -5px;
+            }
+            :host[display] {
+                display: inline-block;
+            }
+        </style>
+
+        <div class="account-holder">
+            <div id="triggerDropdown" class="user-holder clearfix">
+                <img src="[[ activeAccount.image ]]" class="account-img float-left">
+
+                <property-check class="display-long" property="[[ activeAccount.firstName ]]">
+                    <span class="account-info">[[ activeAccount.firstName ]] [[ activeAccount.lastName ]]</span>
+                </property-check>
+
+                <iron-icon icon="arrow-drop-down" class="display-long"></iron-icon>
+            </div>
+
+            <appsco-dropdown open="{{ pressed }}" trigger="[[ triggerDropdown ]]">
+                <div class="account-holder">
+                    <div class="active-account account">
+                        <div class="image-holder">
+                            <img src="[[ activeAccount.image ]]" class="account-img float-left">
+                        </div>
+                        <div class="account-info">
+
+                            <property-check property="[[ activeAccount.firstName ]]">
+                                <span class="info-lead">[[ activeAccount.firstName ]] [[ activeAccount.lastName ]]</span>
+                            </property-check>
+
+                            <span class="info-additional">[[ activeAccount.email ]]</span>
+
+                            <paper-button class="btn-primary action-my-account">
+                                My Account
+                            </paper-button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="account-holder">
+
+                    <template is="dom-repeat" items="{{ accounts }}">
+
+                        <div class="divider"></div>
+                        <div class="account additional-account clearfix">
+                            <img src="[[ item.image ]]" class="account-img float-left">
+                            <div class="account-info float-left">
+                                <span class="info-lead">[[ item.firstName ]] [[ item.lastName ]]</span>
+                                <span class="info-additional">[[ item.email ]]</span>
+                            </div>
+                        </div>
+
+                    </template>
+
+                </div>
+
+                <div class="divider"></div>
+                <div class="actions">
+                    <paper-button class="btn-default">Add Account</paper-button>
+                    <a href="#" tabindex="-1">
+                        <paper-button class="float-right">Logout</paper-button>
+                    </a>
+                </div>
+            </appsco-dropdown>
+        </div>
+    </template>
+
+    <script>
+
+        Polymer({
+
+            is: 'appsco-user-element',
+
+            properties: {
+
+                display: {
+                    type: Boolean,
+                    value: false,
+                    reflectToAttribute: true
+                },
+
+                /**
+                 * Active account from AppsCo dashboard.
+                 */
+                activeAccount: {
+                    type: Object
+                },
+
+                /**
+                 * Additional accounts from AppsCo dashboard - currently inactive.
+                 */
+                accounts: {
+                    type: Object
+                },
+
+                /**
+                 * If attribute is set account display will contain account-image only.
+                 * Otherwise, account display will contain account-image followed by account-name.
+                 */
+                displayShort: {
+                    type: Boolean,
+                    value: false,
+                    reflectToAttribute: true
+                },
+
+                /**
+                 * Indicates if user clicked on element or not.
+                 */
+                pressed: {
+                    type: Boolean,
+                    value: false,
+                    notify: true
+                },
+
+                triggerDropdown: {
+                    type: Object,
+                    notify: true
+                }
+            },
+
+            listeners: {
+                'triggerDropdown.tap': '__toggle'
+            },
+
+            ready: function() {
+
+                if (this.activeAccount) {
+                    this.display = true;
+                }
+
+            },
+
+            attached: function() {
+                this.triggerDropdown = document.getElementById('triggerDropdown');
+            },
+
+            /**
+             * Toggles 'pressed' property.
+             * @private
+             */
+            __toggle: function() {
+                this.pressed = !this.pressed;
+            }
+        });
+    </script>
+</dom-module>

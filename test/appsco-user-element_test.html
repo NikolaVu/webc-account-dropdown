@@ -1,0 +1,33 @@
+<!doctype html>
+
+<html>
+  <head>
+    <title>appsco-user-element test</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../web-component-tester/browser.js"></script>
+
+    <link rel="import" href="../appsco-user-element.html">
+  </head>
+  <body>
+
+    <test-fixture id="basic">
+      <template>
+        <appsco-user-element></appsco-user-element>
+      </template>
+    </test-fixture>
+
+    <script>
+      suite('appsco-user-element', function() {
+
+        test('instantiating the element works', function() {
+          var element = fixture('basic');
+          assert.equal(element.is, 'appsco-user-element');
+          assert.equal(element.is, 'appsco-user-element');
+        });
+
+      });
+    </script>
+  </body>
+</html>

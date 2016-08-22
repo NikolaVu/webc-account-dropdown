@@ -1,0 +1,172 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<link rel="import" href="../neon-animation/neon-animations.html">
+<link rel="import" href="../neon-animation/neon-animation-runner-behavior.html">
+
+<!--
+`appsco-dropdown` represents dropdown element.
+
+Example:
+
+    <appsco-dropdown open="{{ pressed }}" tabindex="-1"></appsco-dropdown>
+
+@demo demo/index.html
+-->
+
+<dom-module id="appsco-dropdown">
+    <template>
+        <style>
+            :host{
+                display: none;
+                background: transparent;
+                color: black;
+            }
+            :host .content {
+                @apply(--shadow-elevation-2dp);
+                background-color: #ffffff;
+                border-radius: 4px;
+            }
+            :host .caret {
+                height: 10px;
+                position: relative;
+                overflow: hidden;
+            }
+            :host .caret > div:first-child {
+                width: 0;
+                height: 0;
+                border-left: 11px solid transparent;
+                border-right: 11px solid transparent;
+                border-bottom: 11px solid rgba(0,0,0, 0.4);
+                position: absolute;
+                right: 10px;
+            }
+            :host .caret > div:last-child {
+                width: 0;
+                height: 0;
+                border-left: 10px solid transparent;
+                border-right: 10px solid transparent;
+                border-bottom: 10px solid var(--caret-color, rgb(255,255,255));
+                position: absolute;
+                right: 11px;
+            }
+            :host[open] {
+                display: block;
+            }
+        </style>
+        <div class="caret">
+            <div></div>
+            <div></div>
+        </div>
+        <div class="content"><content></content></div>
+    </template>
+
+    <script>
+
+        Polymer({
+            is: 'appsco-dropdown',
+
+            behaviors: [
+                Polymer.NeonAnimationRunnerBehavior
+            ],
+
+            properties: {
+
+                /**
+                 * Animation for dropdown appearance.
+                 */
+                animationConfig: {
+                    type: Object,
+                    value: function() {
+                        return {
+                            'entry': [{
+                                name: 'scale-up-animation',
+                                node: this,
+                                axis: 'y',
+                                transformOrigin: '0 0',
+                                timing: {
+                                    duration: 300
+                                }
+                            }]
+                        }
+                    }
+                },
+
+                /**
+                 * Indicates whether dropdown is opened or not.
+                 * This value comes from an element that triggers dropdown to toggle.
+                 */
+                open: {
+                    type: Boolean,
+                    value: false,
+                    notify: true,
+                    reflectToAttribute: true
+                },
+
+                /**
+                 * Indicates if user clicks inside dropdown.
+                 */
+                trigger: {
+                    type: String,
+                    value: '',
+                    notify: true
+                }
+            },
+
+            listeners: {
+                'neon-animation-finish': '__onAnimationFinish',
+                'open-changed': '__openChanged'
+            },
+
+            ready: function() {
+
+                Polymer.Gestures.add(document, 'tap', this.__handleDocumentClick.bind(this));
+
+            },
+
+            __isInPath: function(path, item) {
+                path = path || [];
+                for (var i = 0; i < path.length; i++) {
+
+                    if (path[i] == item) {
+                        return true;
+
+                        break;
+                    }
+                }
+
+                return false;
+            },
+
+            __handleDocumentClick: function(e) {
+                var path = Polymer.dom(e).path;
+
+                if (!this.__isInPath(path, this) && !this.__isInPath(path, this.trigger)) {
+                    this.open = false;
+                }
+
+            },
+
+            /**
+             * It is called after dropdown animation is finished.
+             * @private
+             */
+            __onAnimationFinish: function() {
+                this.focus();
+            },
+
+            /**
+             * Listen for 'open' property change.
+             * If it is true it shows the dropdown.
+             * If it is false it hides the dropdown.
+             * @private
+             */
+            __openChanged: function() {
+
+                if (this.open) {
+                    this.playAnimation('entry');
+                }
+
+            }
+        });
+    </script>
+</dom-module>

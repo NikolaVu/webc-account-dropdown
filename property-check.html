@@ -1,0 +1,63 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<!--
+`property-check` is used to check if property should be displayed or not.
+If property has value it prints it inside content.
+If property is 'undefined' or 'null' or has empty value it doesn't print it.
+
+Example:
+
+    <property-check property="[[ propertyValue ]]">
+        <p>[[ propertyValue ]]</span>
+    </property-check>
+
+@demo demo/index.html
+-->
+
+<dom-module id="property-check">
+    <template>
+
+        <template is="dom-if" if="{{ exists }}">
+            <content></content>
+        </template>
+
+    </template>
+
+    <script>
+        Polymer({
+            is: 'property-check',
+
+            properties: {
+
+                /**
+                 * Property to be checked.
+                 */
+                property: {
+                    type: String,
+                    value: '',
+                    notify: true
+                },
+
+                /**
+                 * Indicates if property exists/is null/is empty.
+                 */
+                exists: {
+                    type: Boolean,
+                    value: false
+                }
+            },
+
+            listeners: {
+                'property-changed': '_propertyChanged'
+            },
+
+            /**
+             * Evaluates the property given. Returns true | false.
+             * @private
+             */
+            _propertyChanged: function() {
+                this.exists = (this.property && this.property != '' && this.property != null);
+            }
+        });
+    </script>
+</dom-module>
