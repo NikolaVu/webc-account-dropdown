@@ -16,15 +16,14 @@ Example:
 <dom-module id="appsco-dropdown">
     <template>
         <style>
-            :host{
+            :host {
                 display: none;
                 background: transparent;
-                color: black;
             }
             :host .content {
                 @apply(--shadow-elevation-2dp);
                 background-color: #ffffff;
-                border-radius: 4px;
+                border-radius: var(--border-radius-base);
             }
             :host .caret {
                 height: 10px;
@@ -36,7 +35,7 @@ Example:
                 height: 0;
                 border-left: 11px solid transparent;
                 border-right: 11px solid transparent;
-                border-bottom: 11px solid rgba(0,0,0, 0.4);
+                border-bottom: 11px solid rgba(0,0,0, 0.3);
                 position: absolute;
                 right: 10px;
             }
@@ -45,12 +44,15 @@ Example:
                 height: 0;
                 border-left: 10px solid transparent;
                 border-right: 10px solid transparent;
-                border-bottom: 10px solid var(--caret-color, rgb(255,255,255));
+                border-bottom: 10px solid var(--caret-color, #ffffff);
                 position: absolute;
                 right: 11px;
             }
             :host[open] {
                 display: block;
+            }
+            :host[data-info] .caret > div:last-child {
+                border-bottom-color: var(--info-background-color);
             }
         </style>
         <div class="caret">

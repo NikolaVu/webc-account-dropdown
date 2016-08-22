@@ -17,7 +17,7 @@ Example:
 <dom-module id="property-check">
     <template>
 
-        <template is="dom-if" if="{{ exists }}">
+        <template is="dom-if" if="{{ _exists }}">
             <content></content>
         </template>
 
@@ -41,7 +41,7 @@ Example:
                 /**
                  * Indicates if property exists/is null/is empty.
                  */
-                exists: {
+                _exists: {
                     type: Boolean,
                     value: false
                 }
@@ -56,7 +56,7 @@ Example:
              * @private
              */
             _propertyChanged: function() {
-                this.exists = (this.property && this.property != '' && this.property != null);
+                this._exists = (this.property && this.property != '' && this.property != null);
             }
         });
     </script>
