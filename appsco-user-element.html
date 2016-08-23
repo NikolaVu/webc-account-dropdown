@@ -27,14 +27,11 @@ Custom property | Description | Default
 `--border-color` | Default border color for element | #d5d8d8
 `--divider-color` | Default color for divider | #eaeaea
 `--info-background-color` | Background color for info inside element | #edf9ff
-`--border-radius-base` | Default border radius | 4px
+`--border-radius-round` | Border radius for circle shaped elements | 50%
 `--paper-button-ink-color` | Background color of the ripple | Based on the button's color
 `--paper-button` | Mixin applied to the button | `{}`
 `--paper-button-flat-keyboard-focus` | Mixin applied to flat button in focus state
-`--border-radius-top` | Mixin for top border radius | border-top-left-radius: var(--border-radius-base);
-                      |                             | border-top-right-radius: var(--border-radius-base);
-`--border-radius-bottom` | Mixin for bottom border radius | border-bottom-left-radius: var(--border-radius-base);
-                         |                                | border-bottom-right-radius: var(--border-radius-base);
+`--round-element` | Mixin for round elements | border-radius: var(--border-radius-round);
 
 @demo demo/index.html
 -->
@@ -88,7 +85,7 @@ Custom property | Description | Default
             :host .account-img {
                 width: 32px;
                 height: 32px;
-                border-radius: 50%;
+                @apply(--round-element);
             }
             :host .account-info {
                 margin: 10px 0 0 10px;
@@ -114,13 +111,9 @@ Custom property | Description | Default
             }
             :host appsco-dropdown .info {
                 font-size: 80%;
-                @apply(--border-radius-top);
             }
             :host appsco-dropdown .account, :host appsco-dropdown .actions, :host appsco-dropdown .info {
                 padding: 10px 20px;
-            }
-            :host appsco-dropdown .actions {
-                @apply(--border-radius-bottom);
             }
             :host appsco-dropdown .account-img {
                 width: 48px;
@@ -160,7 +153,7 @@ Custom property | Description | Default
             :host appsco-dropdown .active-account .account-img {
                 width: 96px;
                 height: 96px;
-                border-radius: 50%;
+                @apply(--round-element);
             }
             :host appsco-dropdown .active-account .account-info {
                 width: 156px;
