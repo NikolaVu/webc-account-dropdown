@@ -16,7 +16,7 @@ Example:
 
     <appsco-user-element></appsco-user-element>
     <appsco-user-element display-short></appsco-user-element>
-    <appsco-user-element active-account="{{activeAccount}}" accounts="{{accounts}}" display-short></appsco-user-element>
+    <appsco-user-element active-account="{{ activeAccount }}" accounts="{{ accounts }}" display-short></appsco-user-element>
 
 Custom property | Description | Default
 ----------------|-------------|----------
@@ -44,7 +44,7 @@ Custom property | Description | Default
                 font-size: 14px;
                 position: relative;
                 cursor: pointer;
-                display: none;
+                display: inline-block;
             }
             :host .divider {
                 width: 100%;
@@ -180,17 +180,16 @@ Custom property | Description | Default
                 top: 40px;
                 right: -5px;
             }
-            :host[_display] {
-                display: inline-block;
-            }
         </style>
 
-        <div class="account-holder">
-            <div id="triggerDropdown" class="user-holder clearfix">
-                <img src="[[ activeAccount.image ]]" class="account-img pull-left">
+        <div class="account-holder" hidden$="{{ __exists(activeAccount) }}">
+            <div id="triggerDropdown" class="user-holder clearfix" on-tap="__toggle">
+                <property-check property="[[ activeAccount.picture_url ]]">
+                    <img src="[[ activeAccount.picture_url ]]" class="account-img pull-left">
+                </property-check>
 
-                <property-check class="display-full" property="[[ activeAccount.firstName ]]">
-                    <span class="account-info">[[ activeAccount.firstName ]] [[ activeAccount.lastName ]]</span>
+                <property-check class="display-full" property="[[ activeAccount.first_name ]]">
+                    <span class="account-info">[[ activeAccount.first_name ]] [[ activeAccount.last_name ]]</span>
                 </property-check>
 
                 <iron-icon icon="arrow-drop-down" class="display-full"></iron-icon>
@@ -205,13 +204,15 @@ Custom property | Description | Default
 
                 <div class="account-holder">
                     <div class="active-account account">
-                        <div class="image-holder">
-                            <img src="[[ activeAccount.image ]]" class="account-img pull-left">
-                        </div>
+                        <property-check property="[[ activeAccount.picture_url ]]">
+                            <div class="image-holder">
+                                <img src="[[ activeAccount.picture_url ]]" class="account-img pull-left">
+                            </div>
+                        </property-check>
                         <div class="account-info">
 
-                            <property-check property="[[ activeAccount.firstName ]]">
-                                <span class="info-lead">[[ activeAccount.firstName ]] [[ activeAccount.lastName ]]</span>
+                            <property-check property="[[ activeAccount.first_name ]]">
+                                <span class="info-lead">[[ activeAccount.first_name ]] [[ activeAccount.last_name ]]</span>
                             </property-check>
 
                             <span class="info-additional truncate">[[ activeAccount.email ]]</span>
@@ -229,9 +230,9 @@ Custom property | Description | Default
 
                         <div class="divider"></div>
                         <div class="account additional-account clearfix">
-                            <img src="[[ item.image ]]" class="account-img pull-left">
+                            <img src="[[ item.picture_url ]]" class="account-img pull-left">
                             <div class="account-info pull-left">
-                                <span class="info-lead">[[ item.firstName ]] [[ item.lastName ]]</span>
+                                <span class="info-lead">[[ item.first_name ]] [[ item.last_name ]]</span>
                                 <span class="info-additional truncate">[[ item.email ]]</span>
                             </div>
                         </div>
@@ -272,14 +273,17 @@ Custom property | Description | Default
                  * Active account from AppsCo dashboard.
                  */
                 activeAccount: {
-                    type: Object
+                    type: Object,
+                    value: null,
+                    notify: true
                 },
 
                 /**
                  * Additional accounts from AppsCo dashboard - currently inactive.
                  */
                 accounts: {
-                    type: Object
+                    type: Object,
+                    value: null
                 },
 
                 /**
@@ -314,16 +318,16 @@ Custom property | Description | Default
                 'triggerDropdown.tap': '__toggle'
             },
 
-            ready: function() {
-
-                if (this.activeAccount) {
-                    this._display = true;
-                }
-
-            },
-
             attached: function() {
                 this._triggerDropdown = this.$.triggerDropdown;
+            },
+
+            /**
+             * Checks if activeAccount property is present or not.
+             * @private
+             */
+            __exists: function(account) {
+                return !(account && account != null);
             },
 
             /**
