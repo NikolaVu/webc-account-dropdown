@@ -209,6 +209,7 @@ Custom property | Description | Default
                                 <img src="[[ activeAccount.picture_url ]]" class="account-img pull-left">
                             </div>
                         </property-check>
+
                         <div class="account-info">
 
                             <property-check property="[[ activeAccount.first_name ]]">
@@ -274,7 +275,7 @@ Custom property | Description | Default
                  */
                 activeAccount: {
                     type: Object,
-                    value: null,
+                    value: {},
                     notify: true
                 },
 
@@ -282,8 +283,8 @@ Custom property | Description | Default
                  * Additional accounts from AppsCo dashboard - currently inactive.
                  */
                 accounts: {
-                    type: Object,
-                    value: null
+                    type: Array,
+                    value: []
                 },
 
                 /**
@@ -327,7 +328,12 @@ Custom property | Description | Default
              * @private
              */
             __exists: function(account) {
-                return !(account && account != null);
+
+                    for (var key in account) {
+                        return false;
+                    }
+
+                    return true;
             },
 
             /**
