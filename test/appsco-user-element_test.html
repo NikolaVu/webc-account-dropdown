@@ -1,7 +1,7 @@
 <!doctype html>
 
 <html>
-  <head>
+<head>
     <title>appsco-user-element test</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
@@ -9,25 +9,94 @@
     <script src="../../web-component-tester/browser.js"></script>
 
     <link rel="import" href="../appsco-user-element.html">
-  </head>
-  <body>
+</head>
+<body>
 
-    <test-fixture id="basic">
-      <template>
+<test-fixture id="appsco-user-fixture">
+    <template>
         <appsco-user-element></appsco-user-element>
-      </template>
-    </test-fixture>
+    </template>
+</test-fixture>
 
-    <script>
-      suite('appsco-user-element', function() {
+<script>
+    suite('appsco-user-element', function() {
+        var appscoUser;
 
-        test('instantiating the element works', function() {
-          var element = fixture('basic');
-          assert.equal(element.is, 'appsco-user-element');
-          assert.equal(element.is, 'appsco-user-element');
+        setup(function() {
+            appscoUser = fixture('appsco-user-fixture');
         });
 
-      });
-    </script>
-  </body>
+        test('Test element instance', function() {
+            assert.equal(appscoUser.is, 'appsco-user-element');
+        });
+
+        test('Test that appsco-user element contains the appsco-dropdown element', function() {
+            assert.equal(Polymer.dom(appscoUser.root).querySelector('appsco-dropdown').is, 'appsco-dropdown');
+        });
+
+        test('Test properties existance on appsco-user', function() {
+            expect(appscoUser).to.have.property('activeAccount');
+            expect(appscoUser).to.have.property('accounts');
+            expect(appscoUser).to.have.property('displayShort');
+        });
+
+        test('Test type of properties for appsco-user element', function() {
+            expect(appscoUser.activeAccount, 'activeAccount property value should be an Object').to.be.an('Object');
+            expect(appscoUser.accounts, 'accounts property value should be an Array of objects').to.be.an('Array');
+            expect(appscoUser.displayShort, 'displayShort property value should be a Boolean').to.be.a('Boolean');
+        });
+
+        test('Test existance of element which triggers dropdown to open', function() {
+            expect(appscoUser.$.triggerDropdown, 'Element which triggers dropdown').to.exist;
+        });
+
+        test('Test properties existance on appsco-dropdown', function() {
+            var dropdownElement = Polymer.dom(appscoUser.root).querySelector('appsco-dropdown');
+
+            expect(dropdownElement, 'Dropdown element should have open property').to.have.property('open');
+            expect(dropdownElement, 'Dropdown element should have trigger property').to.have.property('trigger');
+        });
+
+        test('Test type of properties for appsco-dropdown', function() {
+            var dropdownElement = Polymer.dom(appscoUser.root).querySelector('appsco-dropdown');
+
+            expect(dropdownElement.open).to.be.a('Boolean');
+        });
+
+        test('Test if trigger property of appsco-dropdown is actually trigger element from appsco-user element', function() {
+            var dropdownElement = Polymer.dom(appscoUser.root).querySelector('appsco-dropdown');
+
+            expect(dropdownElement.trigger, 'trigger should be element from appsco-user element').to.be.equal(appscoUser.$.triggerDropdown);
+        });
+
+        test('Test if it is clicked on element', function() {
+            var triggerDropdown = appscoUser.$.triggerDropdown;
+
+            // First click to open dropdown
+            triggerDropdown.click();
+            expect(appscoUser._pressed).to.be.equal(true);
+
+            // Next click to close dropdown
+            triggerDropdown.click();
+            expect(appscoUser._pressed).to.be.equal(false);
+        });
+
+        test('Test if dropdown opens', function() {
+            var triggerDropdown = appscoUser.$.triggerDropdown,
+                dropdownElement = Polymer.dom(appscoUser.root).querySelector('appsco-dropdown');
+
+            // First click to open dropdown
+            triggerDropdown.click();
+            expect(dropdownElement.open, 'Property open should be set to true to open dropdown').to.be.equal(true);
+            expect(getComputedStyle(dropdownElement).display, 'If it is shown it should have display: block').to.be.equal('block');
+
+            // Next click to close dropdown
+            triggerDropdown.click();
+            expect(dropdownElement.open, 'Property open should be set to false to close dropdown').to.be.equal(false);
+            expect(getComputedStyle(dropdownElement).display, 'If it is hidden it should have display: none').to.be.equal('none');
+        });
+
+    });
+</script>
+</body>
 </html>

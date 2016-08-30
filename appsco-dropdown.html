@@ -107,8 +107,8 @@ Example:
                  * Indicates if user clicks inside dropdown.
                  */
                 trigger: {
-                    type: String,
-                    value: '',
+                    type: Object,
+                    value: {},
                     notify: true
                 }
             },
@@ -126,6 +126,7 @@ Example:
 
             __isInPath: function(path, item) {
                 path = path || [];
+
                 for (var i = 0; i < path.length; i++) {
 
                     if (path[i] == item) {
